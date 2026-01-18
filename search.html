@@ -75,7 +75,7 @@
 
 <body>
   <header>
-    <a href="sale.html">← WEAVE</a>
+    <a href="index.html">← WEAVE</a>
     <span>Search</span>
   </header>
 
@@ -203,11 +203,11 @@
         </article>
       `).join("");
 
-      // "View" goes back to sale.html and switches tab
+      // "View" goes back to index.html and switches tab
       $("grid").querySelectorAll(".btn").forEach(btn=>{
         btn.addEventListener("click", ()=>{
           const tab = btn.dataset.tab;
-          const url = `sale.html?tab=${encodeURIComponent(tab)}`;
+          const url = `index.html?tab=${encodeURIComponent(tab)}`;
           location.href = url;
         });
       });
