@@ -1,0 +1,212 @@
+{
+  "brandName": "WEAVE",
+  "brandMark": "WB",
+  "announceText": "Seasonal Sale is on — while supplies last",
+  "defaultTab": "men",
+  "tabs": [
+    { "key": "women", "label": "WOMEN" },
+    { "key": "men", "label": "MEN" },
+    { "key": "kids", "label": "KIDS" },
+    { "key": "accessories", "label": "ACCESSORIES" }
+  ],
+  "megaMenu": {
+  "women": [
+    { "label": "Outerwear", "emoji": "🧥", "href": "#" },
+    { "label": "Bottoms", "emoji": "👖", "href": "#" },
+    { "label": "T-Shirts & Sweats", "emoji": "👕", "href": "#" },
+    { "label": "Dresses & Skirts", "emoji": "👗", "href": "#" },
+    { "label": "Sweaters & Cardigans", "emoji": "🧶", "href": "#" },
+    { "label": "Innerwear", "emoji": "🩲", "href": "#" },
+    { "label": "Accessories", "emoji": "🧣", "href": "#" },
+    { "label": "Sale", "emoji": "🏷️", "href": "#" }
+  ],
+  "men": [
+    { "label": "Outerwear", "emoji": "🧥", "href": "#" },
+    { "label": "Bottoms", "emoji": "👖", "href": "#" },
+    { "label": "T-Shirts & Sweats", "emoji": "👕", "href": "#" },
+    { "label": "Sweaters", "emoji": "🧶", "href": "#" },
+    { "label": "Innerwear", "emoji": "🩲", "href": "#" },
+    { "label": "Accessories", "emoji": "🧢", "href": "#" },
+    { "label": "Sale", "emoji": "🏷️", "href": "#" }
+  ],
+  "kids": [
+    { "label": "Outerwear", "emoji": "🧥", "href": "#" },
+    { "label": "Tops", "emoji": "👕", "href": "#" },
+    { "label": "Bottoms", "emoji": "👖", "href": "#" },
+    { "label": "Loungewear", "emoji": "🧸", "href": "#" },
+    { "label": "Accessories", "emoji": "🧣", "href": "#" },
+    { "label": "Sale", "emoji": "🏷️", "href": "#" }
+  ],
+  "accessories": [
+    { "label": "Bags", "emoji": "👜", "href": "#" },
+    { "label": "Hats", "emoji": "🧢", "href": "#" },
+    { "label": "Socks", "emoji": "🧦", "href": "#" },
+    { "label": "Scarves", "emoji": "🧣", "href": "#" },
+    { "label": "Belts", "emoji": "🧷", "href": "#" },
+    { "label": "Sale", "emoji": "🏷️", "href": "#" }
+  ]
+},
+
+  "pages": {
+    "women": {
+      "title": "Women’s Winter Sale",
+      "intro": "Save on seasonal essentials. From cozy layers to everyday styles, shop special prices while supplies last.",
+      "sectionTitle": "Top Picks",
+      "products": [
+        {
+          "meta": "WOMEN, XS–XXL",
+          "name": "Heattech Turtleneck (Extra Warm)",
+          "price": 19.9,
+          "promo": "Limited-time offer. Select colors/sizes only.",
+          "badge": "Sale",
+          "rating": 4.6,
+          "reviews": 313,
+          "colors": ["#111111", "#b91c1c", "#f3f4f6", "#6b7280", "#1f2937"],
+          "images": ["https://picsum.photos/600/800?1", "https://picsum.photos/600/800?101"]
+        },
+        {
+          "meta": "WOMEN, XS–XXL",
+          "name": "Seamless Down Short Jacket",
+          "price": 79.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.7,
+          "reviews": 40,
+          "colors": ["#0f172a", "#f9fafb", "#9ca3af"],
+          "images": ["https://picsum.photos/600/800?2", "https://picsum.photos/600/800?102"]
+        }
+      ]
+    },
+    "men": {
+      "title": "Men’s Winter Sale",
+      "intro": "Save on versatile essentials for the season. From cozy layers to timeless styles, shop special prices while supplies last.",
+      "sectionTitle": "Top Picks",
+      "products": [
+        {
+          "meta": "MEN, XS–3XL",
+          "name": "Heattech Extra Warm Cashmere Blend T-Shirt",
+          "price": 19.9,
+          "promo": "Limited-time offer. Select colors/sizes only.",
+          "badge": "Sale",
+          "rating": 4.4,
+          "reviews": 30,
+          "colors": ["#f5f5f4", "#111111", "#9ca3af", "#7c2d12", "#14532d"],
+          "images": ["https://picsum.photos/600/800?11", "https://picsum.photos/600/800?111"]
+        },
+        {
+          "meta": "MEN, XS–3XL",
+          "name": "Heattech Extra Warm Cashmere Blend Turtleneck",
+          "price": 19.9,
+          "promo": "Limited-time offer. Select colors/sizes only.",
+          "badge": "Sale",
+          "rating": 4.6,
+          "reviews": 23,
+          "colors": ["#2e1065", "#111111", "#9ca3af", "#14532d", "#1d4ed8"],
+          "images": ["https://picsum.photos/600/800?12", "https://picsum.photos/600/800?112"]
+        },
+        {
+          "meta": "MEN, XXS–3XL",
+          "name": "Seamless Down Jacket",
+          "price": 99.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.6,
+          "reviews": 45,
+          "colors": ["#111111", "#f5f5f4"],
+          "images": ["https://picsum.photos/600/800?13", "https://picsum.photos/600/800?113"]
+        },
+        {
+          "meta": "MEN, XXS–3XL",
+          "name": "Seamless Down Coat",
+          "price": 129.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.3,
+          "reviews": 22,
+          "colors": ["#111111", "#6b7280", "#1f2937"],
+          "images": ["https://picsum.photos/600/800?14", "https://picsum.photos/600/800?114"]
+        }
+      ]
+    },
+    "kids": {
+      "title": "Kids’ Sale",
+      "intro": "Warm layers and comfy essentials for kids—special prices while supplies last.",
+      "sectionTitle": "Top Picks",
+      "products": [
+        {
+          "meta": "KIDS, 4–12Y",
+          "name": "Kids Fleece Jacket",
+          "price": 19.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.6,
+          "reviews": 65,
+          "colors": ["#111111", "#ef4444", "#3b82f6", "#22c55e"],
+          "images": ["https://picsum.photos/600/800?21", "https://picsum.photos/600/800?121"]
+        },
+        {
+          "meta": "KIDS, 4–12Y",
+          "name": "Padded Vest",
+          "price": 24.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.5,
+          "reviews": 43,
+          "colors": ["#111111", "#f5f5f4", "#9ca3af"],
+          "images": ["https://picsum.photos/600/800?22", "https://picsum.photos/600/800?122"]
+        }
+      ]
+    },
+    "accessories": {
+      "title": "Accessories Sale",
+      "intro": "Finish the look with accessories at special prices while supplies last.",
+      "sectionTitle": "Top Picks",
+      "products": [
+        {
+          "meta": "ACCESSORIES",
+          "name": "Ribbed Beanie",
+          "price": 9.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.7,
+          "reviews": 120,
+          "colors": ["#111111", "#9ca3af", "#f5f5f4", "#1f2937"],
+          "images": ["https://picsum.photos/600/800?31", "https://picsum.photos/600/800?131"]
+        },
+        {
+          "meta": "ACCESSORIES",
+          "name": "Heattech Scarf",
+          "price": 14.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.6,
+          "reviews": 88,
+          "colors": ["#111111", "#b91c1c", "#6b7280"],
+          "images": ["https://picsum.photos/600/800?32", "https://picsum.photos/600/800?132"]
+        },
+        {
+          "meta": "ACCESSORIES",
+          "name": "Everyday Tote Bag",
+          "price": 19.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.5,
+          "reviews": 54,
+          "colors": ["#111111", "#14532d", "#1d4ed8"],
+          "images": ["https://picsum.photos/600/800?33", "https://picsum.photos/600/800?133"]
+        },
+        {
+          "meta": "ACCESSORIES",
+          "name": "Thermal Socks (2-Pack)",
+          "price": 7.9,
+          "promo": "Sale",
+          "badge": "Sale",
+          "rating": 4.4,
+          "reviews": 72,
+          "colors": ["#111111", "#f5f5f4", "#9ca3af"],
+          "images": ["https://picsum.photos/600/800?34", "https://picsum.photos/600/800?134"]
+        }
+      ]
+    }
+  }
+}

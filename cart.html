@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cart</title>
+
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#f9fafb;color:#111}
+    header{background:#fff;border-bottom:1px solid #e5e7eb;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+    a{text-decoration:none;color:#111;font-weight:700}
+    main{max-width:900px;margin:0 auto;padding:40px 24px}
+    h1{margin:0 0 16px;font-size:32px}
+
+    .cart{
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:24px;
+    }
+    .item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:1px solid #e5e7eb;
+      padding:14px 0;
+    }
+    .item:last-child{border-bottom:none}
+    .name{font-weight:700}
+    .price{color:#6b7280}
+    .qty{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    button{
+      border:1px solid #e5e7eb;
+      background:#fff;
+      cursor:pointer;
+      padding:6px 10px;
+      border-radius:8px;
+      font-weight:700;
+    }
+    button:hover{background:#f3f4f6}
+    .remove{color:#d60000;border:none;background:transparent}
+    .total{
+      margin-top:24px;
+      font-size:20px;
+      font-weight:900;
+      display:flex;
+      justify-content:space-between;
+    }
+    .empty{color:#6b7280}
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="sale.html">← WEAVE</a>
+    <span>Cart</span>
+  </header>
+
+  <main>
+    <h1>Your Cart</h1>
+
+    <div class="cart" id="cart"></div>
+  </main>
+
+  <script>
+    const cartEl = document.getElementById("cart");
+
+    function getCart(){
+      return JSON.parse(localStorage.getItem("cart") || "[]");
+    }
+
+    function saveCart(cart){
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+
+    function render(){
+      const cart = getCart();
+
+      if(cart.length === 0){
+        cartEl.innerHTML = `<p class="empty">Your cart is empty.</p>`;
+        return;
+      }
+
+      let total = 0;
+
+      cartEl.innerHTML = cart.map((item, i) => {
+        total += item.price * item.qty;
+        return `
+          <div class="item">
+            <div>
+              <div class="name">${item.name}</div>
+              <div class="price">$${item.price.toFixed(2)}</div>
+            </div>
+            <div class="qty">
+              <button onclick="updateQty(${i}, -1)">−</button>
+              <strong>${item.qty}</strong>
+              <button onclick="updateQty(${i}, 1)">+</button>
+              <button class="remove" onclick="removeItem(${i})">Remove</button>
+            </div>
+          </div>
+        `;
+      }).join("") + `
+        <div class="total">
+          <span>Total</span>
+          <span>$${total.toFixed(2)}</span>
+        </div>
+      `;
+    }
+
+    function updateQty(i, change){
+      const cart = getCart();
+      cart[i].qty += change;
+      if(cart[i].qty <= 0) cart.splice(i,1);
+      saveCart(cart);
+      render();
+    }
+
+    function removeItem(i){
+      const cart = getCart();
+      cart.splice(i,1);
+      saveCart(cart);
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>

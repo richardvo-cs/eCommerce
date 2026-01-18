@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Search</title>
+
+  <style>
+    :root{
+      --text:#111; --muted:#6b7280; --line:#e5e7eb; --sale:#d60000; --bg:#f9fafb;
+      --shadow:0 10px 28px rgba(0,0,0,.10);
+      --font: system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      --max:1000px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text)}
+    header{background:#fff;border-bottom:1px solid var(--line);padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+    a{text-decoration:none;color:var(--text);font-weight:800}
+    main{max-width:var(--max);margin:0 auto;padding:28px 18px 46px}
+    h1{margin:0 0 14px;font-size:32px}
+
+    .searchbar{
+      display:flex;gap:10px;align-items:center;
+      background:#fff;border:1px solid var(--line);border-radius:999px;
+      padding:12px 14px;
+    }
+    .searchbar input{
+      border:none;outline:none;flex:1;font-size:14px;
+    }
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 10px}
+    .chip{
+      border:1px solid var(--line);background:#fff;
+      padding:8px 12px;border-radius:999px;
+      cursor:pointer;font-weight:700;font-size:13px;
+      color:var(--muted);
+    }
+    .chip.active{color:var(--text);border-color:#111}
+    .meta{color:var(--muted);font-size:13px;margin:10px 0 0}
+
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+    }
+    @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:520px){.grid{grid-template-columns:1fr}}
+
+    .card{
+      background:#fff;border:1px solid var(--line);border-radius:16px;
+      overflow:hidden;
+    }
+    .img{
+      aspect-ratio:3/4;background:#f3f4f6;
+    }
+    .img img{width:100%;height:100%;object-fit:cover;display:block}
+    .body{padding:12px}
+    .tag{font-size:12px;color:var(--muted);font-weight:700}
+    .name{margin:6px 0 8px;font-size:14px;font-weight:700;line-height:1.35}
+    .price{color:var(--sale);font-weight:900}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .btn{
+      border:none;background:#111;color:#fff;
+      padding:8px 10px;border-radius:10px;
+      cursor:pointer;font-weight:800;font-size:12px;
+    }
+    .btn:hover{box-shadow:var(--shadow)}
+    .empty{
+      margin-top:20px;
+      background:#fff;border:1px dashed var(--line);border-radius:16px;
+      padding:18px;color:var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <a href="sale.html">← WEAVE</a>
+    <span>Search</span>
+  </header>
+
+  <main>
+    <h1>Search</h1>
+
+    <div class="searchbar">
+      <span aria-hidden="true">🔎</span>
+      <input id="q" type="text" placeholder="Search products (e.g., jacket, heattech, scarf)..." />
+    </div>
+
+    <div class="chips" id="chips"></div>
+    <div class="meta" id="count"></div>
+
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none;"></div>
+  </main>
+
+  <script>
+    let DATA;
+    let activeFilter = "all";
+    let ALL = [];
+
+    const $ = (id) => document.getElementById(id);
+
+    async function init(){
+      const res = await fetch("./data.json");
+      DATA = await res.json();
+
+      // flatten all products from all pages
+      ALL = Object.entries(DATA.pages || {}).flatMap(([key, page]) => {
+        return (page.products || []).map(p => ({
+          tab: key,
+          title: page.title || key,
+          name: p.name || "",
+          meta: p.meta || key.toUpperCase(),
+          price: Number(p.price ?? 0),
+          image: (p.images && p.images[0]) ? p.images[0] : (p.image || ""),
+          raw: p
+        }));
+      });
+
+      renderChips();
+      bindEvents();
+
+      // support URL ?q=...&tab=...
+      const params = new URLSearchParams(location.search);
+      const q = params.get("q") || "";
+      const tab = params.get("tab") || "all";
+      $("q").value = q;
+      if (tab) activeFilter = tab;
+
+      renderChips();
+      render();
+    }
+
+    function bindEvents(){
+      $("q").addEventListener("input", render);
+
+      // enter key = keep focus
+      $("q").addEventListener("keydown", (e)=>{
+        if(e.key === "Enter"){ e.preventDefault(); }
+      });
+    }
+
+    function renderChips(){
+      const keys = ["all", ...(DATA.tabs || []).map(t => t.key)];
+      const labels = { all: "ALL" };
+      (DATA.tabs || []).forEach(t => labels[t.key] = t.label);
+
+      $("chips").innerHTML = keys.map(k => `
+        <button class="chip ${k===activeFilter ? "active":""}" data-key="${k}">
+          ${labels[k] || k.toUpperCase()}
+        </button>
+      `).join("");
+
+      $("chips").querySelectorAll(".chip").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          activeFilter = btn.dataset.key;
+          renderChips();
+          render();
+        });
+      });
+    }
+
+    function matchesQuery(item, q){
+      if(!q) return true;
+      const hay = (item.name + " " + item.meta + " " + item.tab + " " + item.title).toLowerCase();
+      return hay.includes(q.toLowerCase());
+    }
+
+    function render(){
+      const q = $("q").value.trim();
+
+      const filtered = ALL.filter(item => {
+        const okTab = (activeFilter === "all") ? true : item.tab === activeFilter;
+        return okTab && matchesQuery(item, q);
+      });
+
+      $("count").textContent = `${filtered.length} result${filtered.length===1 ? "" : "s"}${q ? ` for "${q}"` : ""}`;
+
+      if(filtered.length === 0){
+        $("grid").innerHTML = "";
+        $("empty").style.display = "block";
+        $("empty").textContent = q
+          ? `No products matched "${q}". Try another keyword.`
+          : `Type a keyword above to search products.`;
+        return;
+      }
+
+      $("empty").style.display = "none";
+      $("grid").innerHTML = filtered.map((p) => `
+        <article class="card">
+          <div class="img">
+            ${p.image ? `<img src="${p.image}" alt="${escapeHtml(p.name)}">` : ``}
+          </div>
+          <div class="body">
+            <div class="tag">${escapeHtml(p.meta)}</div>
+            <div class="name">${escapeHtml(p.name)}</div>
+            <div class="row">
+              <div class="price">$${Number(p.price).toFixed(2)}</div>
+              <button class="btn" data-tab="${p.tab}">View</button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      // "View" goes back to sale.html and switches tab
+      $("grid").querySelectorAll(".btn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const tab = btn.dataset.tab;
+          const url = `sale.html?tab=${encodeURIComponent(tab)}`;
+          location.href = url;
+        });
+      });
+    }
+
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    init();
+  </script>
+</body>
+</html>

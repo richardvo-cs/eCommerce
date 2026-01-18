@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sale</title>
+
+  <style>
+    :root{
+      --text:#111;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --sale:#d60000;
+      --bg:#ffffff;
+      --max:1200px;
+      --tab:#6b7280;
+      --shadow:0 10px 28px rgba(0,0,0,.10);
+      --font: system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font);color:var(--text);background:var(--bg)}
+    .container{max-width:var(--max);margin:0 auto;padding:0 18px}
+
+    /* Announcement bar */
+    .announce{background:#111;color:#fff;font-size:13px;padding:10px 0}
+    .announce .row{display:flex;align-items:center;justify-content:center;gap:8px}
+
+    /* Header */
+    header{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:40}
+    .header-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.2px}
+    .brand-mark{
+      width:38px;height:38px;border-radius:10px;background:#111;color:#fff;
+      display:grid;place-items:center;font-size:12px;font-weight:900;
+    }
+
+    .nav{
+      display:flex;gap:48px;justify-content:center;flex:1;
+      font-weight:700;font-size:14px;letter-spacing:.02em
+    }
+    .nav a{color:var(--tab);text-decoration:none;cursor:pointer;position:relative;padding:10px 0}
+    .nav a.active{color:var(--text)}
+    .nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-12px;height:2px;background:#111}
+
+    .icons{display:flex;gap:14px;color:#111;opacity:.92}
+    .icon{width:22px;height:22px;display:inline-block}
+    .iconbtn{
+      background:transparent;border:none;cursor:pointer;padding:6px;border-radius:10px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+    .iconbtn:hover{box-shadow:var(--shadow)}
+    @media (max-width: 860px){ .nav{gap:22px} }
+    @media (max-width: 680px){ .nav{display:none} }
+
+    /* Hero */
+    .hero{padding:26px 0 6px}
+    h1{margin:0 0 10px;font-size:34px;letter-spacing:-.02em}
+    .intro{margin:0;max-width:920px;color:var(--text);line-height:1.55;font-size:14px}
+
+    /* Secondary tabs row */
+    .subtabs{display:flex;gap:32px;margin-top:18px;border-bottom:1px solid var(--line)}
+    .subtab{
+      border:none;background:transparent;padding:12px 0;margin-bottom:-1px;
+      font-weight:800;letter-spacing:.02em;font-size:14px;color:var(--tab);
+      cursor:pointer;border-bottom:2px solid transparent;
+    }
+    .subtab.active{color:var(--text);border-bottom-color:#111}
+
+    /* Section title */
+    .section{padding:18px 0 10px}
+    .section h2{margin:0;font-size:22px;letter-spacing:-.01em}
+
+    /* Product grid */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:22px;
+      padding:12px 0 46px;
+    }
+    @media (max-width: 1100px){ .grid{grid-template-columns:repeat(3,1fr)} }
+    @media (max-width: 840px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width: 520px){ .grid{grid-template-columns:1fr} }
+
+    .card{min-width:0}
+    .imgwrap{
+      position:relative;width:100%;aspect-ratio: 3 / 4;background:#f3f4f6;
+      overflow:hidden;border:1px solid var(--line);
+    }
+    .imgwrap img{width:100%;height:100%;object-fit:cover;display:block}
+    .badge{
+      position:absolute;left:10px;top:10px;background:rgba(255,255,255,.92);
+      border:1px solid var(--line);border-radius:999px;padding:6px 8px;
+      font-size:12px;font-weight:800;
+    }
+    .badge.sale{color:var(--sale)}
+    .arrows{
+      position:absolute;left:0;right:0;top:50%;
+      display:flex;justify-content:space-between;pointer-events:none;
+      padding:0 10px;transform:translateY(-50%);
+      opacity:0;transition:opacity .15s ease;
+    }
+    .imgwrap:hover .arrows{opacity:1}
+    .arrow{
+      pointer-events:auto;border:1px solid var(--line);
+      background:rgba(255,255,255,.92);border-radius:999px;
+      width:34px;height:34px;display:grid;place-items:center;cursor:pointer;
+    }
+
+    .underimg{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0 6px}
+    .swatches{display:flex;gap:6px;flex-wrap:wrap}
+    .dot{width:14px;height:14px;border-radius:999px;border:1px solid #d1d5db;display:inline-block}
+
+    .heart{
+      border:none;background:transparent;cursor:pointer;
+      font-size:20px;line-height:1;opacity:.85;padding:4px;border-radius:10px
+    }
+    .heart:hover{box-shadow:var(--shadow)}
+    .heart[data-on="true"]{color:var(--sale)}
+
+    .meta{color:var(--muted);font-size:12px;letter-spacing:.02em}
+    .name{margin:6px 0 8px;font-size:14px;line-height:1.35;font-weight:600}
+    .price{margin:0;color:var(--sale);font-weight:900;font-size:18px}
+    .promo{margin:6px 0 0;color:var(--sale);font-size:12px;line-height:1.25}
+    .rating{margin:10px 0 0;font-size:12px;color:#111;display:flex;align-items:center;gap:6px}
+    .stars{letter-spacing:.06em}
+    .count{color:var(--muted)}
+
+    .actions{display:flex;gap:10px;margin-top:10px}
+    .btn{
+      border:1px solid var(--line);background:#fff;border-radius:12px;
+      padding:10px 10px;cursor:pointer;font-weight:900;font-size:12px;
+    }
+    .btn.primary{background:#111;color:#fff;border-color:#111}
+    .btn:hover{box-shadow:var(--shadow)}
+
+    /* ============================= */
+    /* MEGA MENU DROPDOWN */
+    /* ============================= */
+    .mega{
+      position:fixed;left:0;right:0;top:96px;background:#fff;border-top:1px solid var(--line);
+      box-shadow:0 18px 40px rgba(0,0,0,.12);
+      transform:translateY(-8px);opacity:0;pointer-events:none;
+      transition:opacity .12s ease, transform .12s ease;z-index:60;
+    }
+    .mega.open{opacity:1;transform:translateY(0);pointer-events:auto}
+    .mega-inner{max-width:1200px;margin:0 auto;padding:18px 18px 26px}
+    .mega-top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .mega-tabs{display:flex;gap:36px;font-weight:800;letter-spacing:.02em;font-size:14px}
+    .mega-tabs button{
+      border:none;background:transparent;cursor:pointer;padding:10px 0;
+      color:var(--tab);border-bottom:2px solid transparent;
+    }
+    .mega-tabs button.active{color:#111;border-bottom-color:#111}
+    .mega-close{border:none;background:transparent;cursor:pointer;font-size:18px;padding:8px;border-radius:10px}
+    .mega-close:hover{box-shadow:var(--shadow)}
+    .mega-search{
+      margin:14px 0 18px;border:1px solid var(--line);border-radius:999px;
+      display:flex;align-items:center;gap:10px;padding:10px 14px;
+    }
+    .mega-search input{border:none;outline:none;flex:1;font-size:14px}
+    .mega-grid{display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:18px 26px}
+    @media (max-width: 900px){
+      .mega{top:86px}
+      .mega-grid{grid-template-columns:repeat(2,1fr)}
+      .mega-tabs{gap:18px}
+    }
+    .mega-item{
+      display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;
+      cursor:pointer;text-decoration:none;color:#111;
+    }
+    .mega-item:hover{background:#f6f7f8}
+    .mega-emoji{width:34px;height:34px;border-radius:10px;background:#f3f4f6;display:grid;place-items:center}
+    .mega-label{font-size:14px;font-weight:600}
+  </style>
+</head>
+
+<body>
+  <div class="announce">
+    <div class="container row">
+      <span id="announceText">Seasonal Sale is on — while supplies last</span>
+    </div>
+  </div>
+
+  <header>
+    <div class="container header-row">
+      <div class="brand">
+        <div class="brand-mark" id="brandMark">WB</div>
+        <div id="brandName">WEAVE</div>
+      </div>
+
+      <nav class="nav" id="topNav"></nav>
+
+      <!-- Icon links -->
+      <div class="icons">
+        <a class="iconbtn" href="search.html" title="Search">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path>
+          </svg>
+        </a>
+        <a class="iconbtn" href="favorites.html" title="Favorites">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 21s-7-4.6-9.2-8.4C.6 9.2 2.2 6.4 5.4 6.1c1.7-.2 3.2.6 4.1 1.8.9-1.2 2.4-2 4.1-1.8 3.2.3 4.8 3.1 2.6 6.5C19 16.4 12 21 12 21z"/>
+          </svg>
+        </a>
+        <a class="iconbtn" href="account.html" title="Account">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4"></circle><path d="M4 20c2-4 14-4 16 0"></path>
+          </svg>
+        </a>
+        <a class="iconbtn" href="cart.html" title="Cart">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 6h15l-2 10H7L6 6z"></path><path d="M6 6L5 3H2"></path>
+            <circle cx="9" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mega menu dropdown (ONLY ONCE) -->
+  <div class="mega" id="mega" aria-hidden="true">
+    <div class="mega-inner">
+      <div class="mega-top">
+        <div class="mega-tabs" id="megaTabs"></div>
+        <button class="mega-close" id="megaClose" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div class="mega-search">
+        <span class="mag">🔎</span>
+        <input id="megaSearch" type="text" placeholder="Search" />
+      </div>
+
+      <div class="mega-grid" id="megaGrid"></div>
+    </div>
+  </div>
+
+  <main class="container">
+    <section class="hero">
+      <h1 id="pageTitle">Sale</h1>
+      <p class="intro" id="pageIntro"></p>
+      <div class="subtabs" id="tabs" role="tablist" aria-label="Categories"></div>
+    </section>
+
+    <section class="section">
+      <h2 id="sectionTitle">Top Picks</h2>
+    </section>
+
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <script>
+    let DATA;
+    let currentTab = "women";
+    let megaTab = null;
+    let megaTimer = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    /* =========================
+       Favorites (localStorage)
+       ========================= */
+    function getFavs(){ return JSON.parse(localStorage.getItem("favorites") || "[]"); }
+    function saveFavs(favs){ localStorage.setItem("favorites", JSON.stringify(favs)); }
+    function favId(tab, name){ return `${tab}__${name}`; }
+
+    function isFav(tab, product){
+      const id = favId(tab, product.name);
+      return getFavs().some(x => x.id === id);
+    }
+
+    function toggleFav(tab, product){
+      const id = favId(tab, product.name);
+      let favs = getFavs();
+      const exists = favs.find(x => x.id === id);
+
+      if(exists){
+        favs = favs.filter(x => x.id !== id);
+        saveFavs(favs);
+        return false;
+      } else {
+        favs.push({
+          id,
+          tab,
+          name: product.name,
+          price: Number(product.price),
+          meta: product.meta || tab.toUpperCase(),
+          image: (product.images && product.images[0]) ? product.images[0] : (product.image || "")
+        });
+        saveFavs(favs);
+        return true;
+      }
+    }
+
+    /* =========================
+       Cart (localStorage)
+       ========================= */
+    function getCart(){ return JSON.parse(localStorage.getItem("cart") || "[]"); }
+    function saveCart(cart){ localStorage.setItem("cart", JSON.stringify(cart)); }
+
+    function addToCart(tab, product){
+      const cart = getCart();
+      const id = `${tab}__${product.name}`;
+      const found = cart.find(x => x.id === id);
+
+      if(found){
+        found.qty += 1;
+      } else {
+        cart.push({
+          id,
+          tab,
+          name: product.name,
+          price: Number(product.price),
+          qty: 1,
+          image: (product.images && product.images[0]) ? product.images[0] : (product.image || "")
+        });
+      }
+      saveCart(cart);
+      // simple feedback
+      alert("Added to cart");
+    }
+
+    /* =========================
+       Mega Menu
+       ========================= */
+    function openMega(key){
+      if(!DATA.megaMenu || !DATA.megaMenu[key]) return;
+      megaTab = key;
+
+      const mega = $("mega");
+      mega.classList.add("open");
+      mega.setAttribute("aria-hidden", "false");
+
+      renderMegaTabs();
+      renderMegaGrid();
+
+      $("megaSearch").value = "";
+    }
+
+    function closeMega(){
+      const mega = $("mega");
+      mega.classList.remove("open");
+      mega.setAttribute("aria-hidden", "true");
+    }
+
+    function renderMegaTabs(){
+      $("megaTabs").innerHTML = DATA.tabs.map(t => `
+        <button class="${t.key === megaTab ? "active" : ""}" data-key="${t.key}">
+          ${t.label}
+        </button>
+      `).join("");
+
+      $("megaTabs").querySelectorAll("button").forEach(btn=>{
+        btn.addEventListener("mouseenter", ()=>{
+          megaTab = btn.dataset.key;
+          renderMegaTabs();
+          renderMegaGrid();
+        });
+        btn.addEventListener("click", ()=>{
+          megaTab = btn.dataset.key;
+          renderMegaTabs();
+          renderMegaGrid();
+        });
+      });
+    }
+
+    function renderMegaGrid(){
+      const items = (DATA.megaMenu && DATA.megaMenu[megaTab]) ? DATA.megaMenu[megaTab] : [];
+      const q = $("megaSearch").value.trim().toLowerCase();
+      const filtered = q ? items.filter(x => x.label.toLowerCase().includes(q)) : items;
+
+      $("megaGrid").innerHTML = filtered.map(x => `
+        <a class="mega-item" href="${x.href || "#"}">
+          <span class="mega-emoji">${x.emoji || "•"}</span>
+          <span class="mega-label">${escapeHtml(x.label)}</span>
+        </a>
+      `).join("");
+    }
+
+    /* =========================
+       Page rendering
+       ========================= */
+    async function init(){
+      const res = await fetch("./data.json");
+      DATA = await res.json();
+
+      $("brandName").textContent = DATA.brandName || "WEAVE";
+      $("brandMark").textContent = DATA.brandMark || "WB";
+      $("announceText").textContent = DATA.announceText || "Seasonal Sale is on — while supplies last";
+
+      // URL tab override
+      const params = new URLSearchParams(location.search);
+      const urlTab = params.get("tab");
+      currentTab = (urlTab && DATA.pages[urlTab]) ? urlTab : (DATA.defaultTab || "women");
+
+      // mega events
+      $("megaClose").addEventListener("click", closeMega);
+      $("megaSearch").addEventListener("input", renderMegaGrid);
+      $("mega").addEventListener("mouseenter", () => { if(megaTimer) clearTimeout(megaTimer); });
+      $("mega").addEventListener("mouseleave", () => { megaTimer = setTimeout(closeMega, 150); });
+      document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeMega(); });
+
+      renderAll();
+    }
+
+    function renderAll(){
+      renderTopNav();
+      renderTabs();
+      renderPage(currentTab);
+    }
+
+    function renderTopNav(){
+      const nav = $("topNav");
+      nav.innerHTML = (DATA.tabs || []).map(t => `
+        <a class="${t.key === currentTab ? "active" : ""}" data-key="${t.key}">${t.label}</a>
+      `).join("");
+
+      nav.querySelectorAll("a").forEach(a => {
+        a.addEventListener("mouseenter", () => openMega(a.dataset.key));
+        a.addEventListener("click", () => switchTab(a.dataset.key));
+      });
+
+      nav.addEventListener("mouseleave", () => {
+        megaTimer = setTimeout(closeMega, 150);
+      });
+      nav.addEventListener("mouseenter", () => {
+        if(megaTimer) clearTimeout(megaTimer);
+      });
+    }
+
+    function renderTabs(){
+      const tabs = $("tabs");
+      tabs.innerHTML = (DATA.tabs || []).map(t => `
+        <button class="subtab ${t.key === currentTab ? "active" : ""}"
+          role="tab"
+          aria-selected="${t.key === currentTab}"
+          data-key="${t.key}">
+          ${t.label}
+        </button>
+      `).join("");
+
+      tabs.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => switchTab(btn.dataset.key));
+      });
+    }
+
+    function switchTab(key){
+      if (!DATA.pages[key]) return;
+      currentTab = key;
+      renderTopNav();
+      renderTabs();
+      renderPage(key);
+      history.replaceState(null, "", `?tab=${encodeURIComponent(key)}`);
+    }
+
+    function stars(r){
+      const full = Math.floor(Number(r) || 0);
+      return "★".repeat(full) + "☆".repeat(Math.max(0, 5-full));
+    }
+
+    function renderPage(key){
+      const page = DATA.pages[key];
+      const grid = $("grid");
+      const items = page.products || [];
+
+      $("pageTitle").textContent = page.title || "Sale";
+      $("pageIntro").textContent = page.intro || "";
+      $("sectionTitle").textContent = page.sectionTitle || "Top Picks";
+
+      grid.innerHTML = items.map((p, idx) => `
+        <article class="card">
+          <div class="imgwrap">
+            ${p.badge ? `<div class="badge ${String(p.badge).toLowerCase()==="sale" ? "sale":""}">${escapeHtml(p.badge)}</div>` : ``}
+            <img src="${p.images?.[0] || p.image || ""}" alt="${escapeHtml(p.name || "Product")}" />
+            <div class="arrows" aria-hidden="true">
+              <button class="arrow" type="button" data-dir="-1" data-idx="${idx}">‹</button>
+              <button class="arrow" type="button" data-dir="1" data-idx="${idx}">›</button>
+            </div>
+          </div>
+
+          <div class="underimg">
+            <div class="swatches" aria-label="Colors">
+              ${(p.colors || []).slice(0, 8).map(c => `<span class="dot" style="background:${c}"></span>`).join("")}
+            </div>
+            <button class="heart" type="button" aria-label="Save" data-on="false">♡</button>
+          </div>
+
+          <div class="meta">${escapeHtml(p.meta || "")}</div>
+          <div class="name">${escapeHtml(p.name || "")}</div>
+          <p class="price">${p.price != null ? `$${Number(p.price).toFixed(2)}` : ""}</p>
+          ${p.promo ? `<p class="promo">${escapeHtml(p.promo)}</p>` : ``}
+          ${p.rating ? `
+            <div class="rating">
+              <span class="stars">${stars(p.rating)}</span>
+              <span>${Number(p.rating).toFixed(1)}</span>
+              <span class="count">(${p.reviews || 0})</span>
+            </div>
+          ` : ``}
+
+          <div class="actions">
+            <button class="btn primary addcart" type="button" data-idx="${idx}">Add to Cart</button>
+            <button class="btn view" type="button" data-tab="${key}">View</button>
+          </div>
+        </article>
+      `).join("");
+
+      // Set initial heart state + click handler (FAVORITES)
+      grid.querySelectorAll(".heart").forEach((btn, idx) => {
+        const product = items[idx];
+        const on = isFav(currentTab, product);
+
+        btn.dataset.on = on ? "true" : "false";
+        btn.textContent = on ? "♥" : "♡";
+
+        btn.addEventListener("click", () => {
+          const nowOn = toggleFav(currentTab, product);
+          btn.dataset.on = nowOn ? "true" : "false";
+          btn.textContent = nowOn ? "♥" : "♡";
+        });
+      });
+
+      // Add to cart buttons
+      grid.querySelectorAll(".addcart").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.dataset.idx);
+          addToCart(currentTab, items[idx]);
+        });
+      });
+
+      // View buttons (same tab; you can expand to product page later)
+      grid.querySelectorAll(".view").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const tab = btn.dataset.tab;
+          location.href = `index.html?tab=${encodeURIComponent(tab)}`;
+        });
+      });
+
+      // Image arrows (simple carousel per card)
+      grid.querySelectorAll(".arrow").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const i = Number(btn.dataset.idx);
+          const dir = Number(btn.dataset.dir);
+          const product = items[i];
+          const imgs = product.images || (product.image ? [product.image] : []);
+          if (imgs.length <= 1) return;
+
+          product._imgIndex = (product._imgIndex ?? 0) + dir;
+          if (product._imgIndex < 0) product._imgIndex = imgs.length - 1;
+          if (product._imgIndex >= imgs.length) product._imgIndex = 0;
+
+          const cardImg = grid.querySelectorAll(".imgwrap img")[i];
+          cardImg.src = imgs[product._imgIndex];
+        });
+      });
+    }
+
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    init();
+  </script>
+</body>
+</html>
